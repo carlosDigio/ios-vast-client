@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name = 'VastClient3'
+  s.name = 'VastClient'
   s.authors = { 'Craig Holliday' => 'craig.holliday@realeyes.com'}
   s.version = '4.2.0'
   s.license = 'MIT'

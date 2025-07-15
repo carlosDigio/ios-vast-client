@@ -81,11 +81,11 @@ class VastXMLParser: NSObject {
             throw VastError.unableToParseDocument
         }
 
-        guard let vm = vastModel else {
+        guard var vm = vastModel else {
             throw VastError.internalError
         }
 
-        finalizeModel(vm)
+        finalizeModel(&vm)
         
         return vm
     }
@@ -325,7 +325,7 @@ extension VastXMLParser: XMLParserDelegate {
                 currentResource?.url = normalizeURL(currentContent)
 
                 if let resource = currentResource {
-                    currentVerification?.javaScriptResource.append(resource)
+                    currentVerification?.javaScriptResources.append(resource)
                     currentResource = nil
                 }
             case VastAdVerificationElements.verificationParameters:
@@ -450,11 +450,11 @@ extension VastXMLParser: XMLParserDelegate {
                 if let url = URL(string: currentContent){
                     currentNonLinear?.nonLinearClickTracking = url
                 }
-            case CompanionElements.iframeResource: // TODO: add icon iFrameResource check if necessary
+            case CompanionElements.iframeResource:
                 if let url = URL(string: currentContent) {
                     currentCompanionCreative?.iFrameResource.append(url)
                 }
-            case CompanionElements.htmlResource: // TODO: add icon htmlResource check if necessary
+            case CompanionElements.htmlResource:
                 if let url = URL(string: currentContent) {
                     currentCompanionCreative?.htmlResource.append(url)
                 }
@@ -519,7 +519,7 @@ extension VastXMLParser: XMLParserDelegate {
     }
 
     // Método para finalizar el parsing y organizar Ad Pods
-    private func finalizeModel(_ model: VastModel) {
+    private func finalizeModel(_ model: inout VastModel) {
         // Organizar anuncios en pods
         model.organizeAdPods()
         

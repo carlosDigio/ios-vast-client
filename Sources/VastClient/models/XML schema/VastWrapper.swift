@@ -84,8 +84,6 @@ public class VastMacroProcessor {
     /// Gets the device's user agent
     /// - Returns: User agent string
     private func getDeviceUserAgent() -> String {
-        // Replace deprecated UIWebView with WKWebView
-        let webView = WKWebView()
         // This is a simplified approach - for production use a proper User-Agent solution
         return "Mozilla/5.0 (iPhone; CPU iPhone OS \(UIDevice.current.systemVersion) like Mac OS X)"
     }

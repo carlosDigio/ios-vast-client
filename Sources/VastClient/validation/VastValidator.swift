@@ -92,9 +92,8 @@ public class VastValidator {
         }
         
         // Validar AdVerifications si están presentes
-        if let adVerifications = ad.adVerifications {
-            try validateAdVerifications(adVerifications)
-        }
+        let adVerifications = ad.adVerifications
+        try validateAdVerifications(VastAdVerifications(verifications: adVerifications))
         
         // Validar companion ads
         for creative in ad.creatives {
@@ -118,8 +117,8 @@ public class VastValidator {
         }
         
         // Validar que tiene al least un recurso
-        let hasResource = !companion.staticResource.isEmpty || 
-                         !companion.htmlResource.isEmpty || 
+        let hasResource = !companion.staticResource.isEmpty ||
+                         !companion.htmlResource.isEmpty ||
                          !companion.iFrameResource.isEmpty
         
         guard hasResource else {
@@ -159,13 +158,7 @@ public class VastValidator {
     }
     
     private func validateAdPod(_ pod: VastAdPod) throws {
-        guard pod.isValid else {
-            throw ValidationError.invalidAdPod
-        }
-        
-        // Validar que los anuncios están ordenados correctamente
-        let sortedAds = pod.sortedAds
-        guard sortedAds.count == pod.ads.count else {
+        guard pod.isComplete else {
             throw ValidationError.invalidAdPod
         }
     }

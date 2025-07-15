@@ -28,7 +28,7 @@ public struct VastVerification: Codable {
     public let apiFramework: String?  // Atributo a nivel de Verification
     
     // Sub Elements - Arrays para los recursos que pueden aparecer múltiples veces
-    public var javaScriptResource: [VastResource] = []
+    public var javaScriptResources: [VastResource] = []
     public var flashResources: [VastResource] = []      // Deprecated pero mantenido por compatibilidad
     public var executableResources: [VastResource] = [] // VAST 4.2 preferencia
     public var viewableImpression: VastViewableImpression?

@@ -11,31 +11,39 @@ import Foundation
 struct AdElements {
     static let wrapper = "Wrapper"
     static let inLine = "InLine"
-    
     static let adSystem = "AdSystem"
     static let adTitle = "AdTitle"
     static let description = "Description"
     static let error = "Error"
-    
     static let impression = "Impression"
     static let category = "Category"
     static let advertiser = "Advertiser"
     static let pricing = "Pricing"
     static let survey = "Survey"
-    static let viewableImpression = "ViewableImpression"
-    static let verification = "Verification"
-    
     static let creatives = "Creatives"
     static let creative = "Creative"
-    
     static let extensions = "Extensions"
     static let ext = "Extension"
+    
+    // VAST 4.2 nuevos elementos
+    static let viewableImpression = "ViewableImpression"
+    static let adVerifications = "AdVerifications"
+    static let verification = "Verification" // Elemento añadido para la verificación de anuncios
+    static let universalAdId = "UniversalAdId"
+    static let blockedAdCategories = "BlockedAdCategories"
 }
 
 struct AdAttributes {
     static let id = "id"
     static let sequence = "sequence"
     static let conditionalAd = "conditionalAd"
+    
+    // VAST 4.2 nuevos atributos
+    static let podId = "podId"
+    static let podPosition = "podPosition"
+    static let podDuration = "podDuration"
+    static let podSize = "podSize"
+    static let maxAds = "maxAds"
 }
 
 public enum AdType: String, Codable {
@@ -45,57 +53,87 @@ public enum AdType: String, Codable {
 }
 
 public struct VastAd: Codable {
-    // Non element type
+    public let podId: String?
+    public var podPosition: Int?
+    public var podSize: Int?
+    public var podDuration: TimeInterval?
+    public let maxAds: Int?
+    
+    // Elements comunes
+    public var id: String?
+    public var conditionalAd: Bool?
     public var type: AdType
-    
-    // attribute
-    public let id: String
-    public let sequence: Int?
-    public let conditionalAd: Bool?
-    
-    // VAST/Ad/Wrapper and VAST/Ad/InLine elements
     public var adSystem: VastAdSystem?
-    public var impressions: [VastImpression] = []
-    public var adVerifications: [VastVerification] = []
-    public var viewableImpression: VastViewableImpression?
-    public var pricing: VastPricing?
+    public var adTitle: String?
+    public var description: String?
+    public var sequence: Int?
     public var errors: [URL] = []
+    public var impressions: [VastImpression] = []
+    public var adCategories: [VastAdCategory] = []
+    public var advertiser: String?
+    public var pricing: VastPricing?
+    public var surveys: [VastSurvey] = []
     public var creatives: [VastCreative] = []
     public var extensions: [VastExtension] = []
     
-    // Inline only
-    public var adTitle: String?
-    public var adCategories: [VastAdCategory] = []
-    public var description: String?
-    public var advertiser: String?
-    public var surveys: [VastSurvey] = []
+    // VAST 4.2 nuevos elementos
+    public var viewableImpression: VastViewableImpression?
+    public var adVerifications: [VastVerification] = []
+    public var universalAdId: VastUniversalAdId?
+    public var blockedAdCategories: [VastBlockedAdCategory] = []
+    public var icons: [VastIcon] = []
+    public var mezzanine: URL?
+    public var expires: TimeInterval?
     
+    // Wrapper específico
     public var wrapper: VastWrapper?
+    
+    // Propiedades para seguimiento e interacción
+    public var followAdditionalWrappers: Bool?
+    public var allowMultipleAds: Bool?
+    public var fallbackOnNoAd: Bool?
 }
 
 extension VastAd {
     public init(attrDict: [String: String]) {
-        var id = ""
-        var sequence = ""
-        var conditionalAd = ""
+        var id: String?
+        var sequence: Int?
+        var conditionalAd: Bool?
+        var podId: String?
+        var podPosition: Int?
+        var podDuration: TimeInterval?
+        var maxAds: Int?
+        
         for (key, value) in attrDict {
             switch key {
             case AdAttributes.id:
                 id = value
             case AdAttributes.sequence:
-                sequence = value
+                sequence = Int(value)
             case AdAttributes.conditionalAd:
-                conditionalAd = value
+                conditionalAd = (value.lowercased() == "true")
+            case AdAttributes.podId:
+                podId = value
+            case AdAttributes.podPosition:
+                podPosition = Int(value)
+            case AdAttributes.podDuration:
+                podDuration = TimeInterval(value)
+            case AdAttributes.maxAds:
+                maxAds = Int(value)
             default:
                 break
             }
         }
+        
         self.id = id
-        self.sequence = Int(sequence)
-        self.conditionalAd = conditionalAd.boolValue
+        self.sequence = sequence
+        self.conditionalAd = conditionalAd
+        self.podId = podId
+        self.podPosition = podPosition
+        self.podDuration = podDuration
+        self.maxAds = maxAds
         self.type = .unknown
     }
 }
 
-extension VastAd: Equatable {
-}
+extension VastAd: Equatable {}

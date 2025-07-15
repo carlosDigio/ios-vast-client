@@ -73,7 +73,89 @@ class VastParser {
         
         let flattenedVastAds = unwrap(vm: vm, count: count)
         vm.ads = flattenedVastAds
+        
+        processAdPods(vastModel: &vm)
+        
         return vm
+    }
+    
+    // Método para procesar y organizar Ad Pods
+    private func processAdPods(vastModel: inout VastModel) {
+        // Agrupar anuncios por Ad Pod
+        var adPods: [String: [VastAd]] = [:]
+        
+        // Filtrar anuncios que pertenecen a Ad Pods (tienen sequence)
+        let podAds = vastModel.ads.filter { $0.sequence != nil }
+        let nonPodAds = vastModel.ads.filter { $0.sequence == nil }
+        
+        // Agrupar por adId (los anuncios del mismo Pod deben compartir el mismo adId)
+        for ad in podAds {
+            if let adId = ad.id {
+                if adPods[adId] == nil {
+                    adPods[adId] = [ad]
+                } else {
+                    adPods[adId]?.append(ad)
+                }
+            }
+        }
+        
+        // Ordenar anuncios dentro de cada Pod por sequence
+        for (podId, ads) in adPods {
+            adPods[podId] = ads.sorted { ($0.sequence ?? 0) < ($1.sequence ?? 0) }
+        }
+        
+        // Actualizar el modelo con los Ad Pods ordenados
+        var newAds: [VastAd] = nonPodAds
+        
+        // Añadir los anuncios de los Pods ordenados
+        for (_, ads) in adPods {
+            newAds.append(contentsOf: ads)
+            
+            // Añadir metadatos de Pod a los anuncios
+            if ads.count > 0 {
+                for i in 0..<ads.count {
+                    var ad = ads[i]
+                    ad.podPosition = i + 1
+                    ad.podSize = ads.count
+                    
+                    // Calcular tiempo total del Pod si es posible
+                    let totalDuration = ads.compactMap { $0.podDuration }.reduce(0, +)
+                    if totalDuration > 0 {
+                        ad.podDuration = totalDuration
+                    }
+                    
+                    // Actualizar el anuncio en el array
+                    if let index = newAds.firstIndex(where: { $0.id == ad.id && $0.sequence == ad.sequence }) {
+                        newAds[index] = ad
+                    }
+                }
+            }
+        }
+        
+        // Actualizar los anuncios en el modelo
+        vastModel.ads = newAds
+    }
+    
+    // Método para determinar si un anuncio es parte de un Ad Pod
+    private func isPartOfAdPod(_ ad: VastAd) -> Bool {
+        return ad.sequence != nil
+    }
+    
+    // Método para calcular metadatos adicionales de Ad Pod
+    private func calculateAdPodMetadata(forAd ad: inout VastAd, inPod podAds: [VastAd]) {
+        guard let sequence = ad.sequence, !podAds.isEmpty else { return }
+        
+        // Posición en el Pod (1-indexed)
+        ad.podPosition = Int(sequence)
+        
+        // Tamaño total del Pod
+        ad.podSize = podAds.count
+        
+        // Duración total del Pod
+        let totalDuration = podAds.compactMap { $0.podDuration }.reduce(0, +)
+        if totalDuration > 0 {
+            ad.podDuration = totalDuration
+        }
     }
     
     func unwrap(vm: VastModel, count: Int) -> [VastAd] {

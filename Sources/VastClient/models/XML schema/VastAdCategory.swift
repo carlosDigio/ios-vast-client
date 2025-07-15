@@ -2,42 +2,36 @@
 //  VastAdCategory.swift
 //  VastClient
 //
-//  Created by Jan Bednar on 12/11/2018.
+//  Created for VAST 4.2 Compliance
+//  Copyright © 2025 iVoox. All rights reserved.
 //
 
 import Foundation
 
-enum VastAdCategoryAttribute: String {
-    case authority
+struct CategoryAttributes {
+    static let authority = "authority"  // VAST 4.2 nuevo atributo
 }
 
-// VAST/Ad/InLine/Category
 public struct VastAdCategory: Codable {
-    public let authority: URL?
-    
-    public var category: String?
+    public let authority: String?
+    public var value: String?
 }
 
 extension VastAdCategory {
-    init?(attrDict: [String: String]) {
-        var authorityValue: String?
-        attrDict.compactMap { key, value -> (VastAdCategoryAttribute, String)? in
-            guard let newKey = VastAdCategoryAttribute(rawValue: key) else {
-                return nil
+    public init(attrDict: [String: String]) {
+        var authority: String?
+        
+        for (key, value) in attrDict {
+            switch key {
+            case CategoryAttributes.authority:
+                authority = value
+            default:
+                break
             }
-            return (newKey, value)
-            }.forEach { (key, value) in
-                switch key {
-                case .authority:
-                    authorityValue = value
-                }
         }
-        guard let authority = authorityValue, let authorityUrl = URL(string: authority) else {
-            return nil
-        }
-        self.authority = authorityUrl
+        
+        self.authority = authority
     }
 }
 
-extension VastAdCategory: Equatable {
-}
+extension VastAdCategory: Equatable {}

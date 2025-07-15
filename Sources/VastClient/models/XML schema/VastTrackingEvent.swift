@@ -9,6 +9,7 @@
 import Foundation
 
 public enum TrackingEventType: String, Codable {
+    // Eventos básicos VAST
     case firstQuartile
     case midpoint
     case thirdQuartile
@@ -32,19 +33,44 @@ public enum TrackingEventType: String, Codable {
     case expand
     case acceptInvitation
     case close
-    case unknown
     case overlayViewDuration
     case otherAdInteraction
+    
+    // VAST 4.2 - Nuevos eventos críticos para audio apps
+    case loaded                    // Companion ad loaded (crítico para iVoox)
+    case viewableImpression        // Viewability metrics
+    case notViewable              // Not viewable tracking
+    case viewUndetermined         // Viewability undetermined
+    case playerCollapsed          // Player state changes
+    case playerExpanded           // Player state changes
+    case adExpand                 // Ad expansion
+    case adCollapse               // Ad collapse
+    case minimized                // Ad minimized
+    case companionAdView          // Companion ad view (ideal para audio)
+    case companionAdClick         // Companion ad interaction
+    case iconView                 // Icon view tracking
+    case iconClick                // Icon click tracking
+    
+    // Audio específicos
+    case audioStart               // Audio playback start
+    case audioFirstQuartile       // Audio 25% progress
+    case audioMidpoint           // Audio 50% progress
+    case audioThirdQuartile      // Audio 75% progress
+    case audioComplete           // Audio playback complete
+    
+    case unknown
 }
 
 struct TrackingEventAttributes {
     static let event = "event"
     static let offset = "offset"
+    static let playerSize = "playerSize"    // VAST 4.2
 }
 
 public struct VastTrackingEvent: Codable {
     public let type: TrackingEventType
     public let offset: Double?
+    public let playerSize: String?          // VAST 4.2 nuevo atributo
     
     public var url: URL?
     public var tracked = false
@@ -52,25 +78,27 @@ public struct VastTrackingEvent: Codable {
 
 extension VastTrackingEvent {
     public init(attrDict: [String: String]) {
-        var event = TrackingEventType.unknown
+        var type: TrackingEventType = .unknown
         var offset: Double?
+        var playerSize: String?
+        
         for (key, value) in attrDict {
-            if key == TrackingEventAttributes.event {
-                if let evt = TrackingEventType(rawValue: value) {
-                    event = evt
-                }
-            }
-
-            if key == TrackingEventAttributes.offset {
-                // format is either (HH:MM:SS or HH:MM:SS.mmm) or n%
-                offset = value.firstIndex(of: ":") != nil ? value.toSeconds : Double(value) ?? 0 / 100
+            switch key {
+            case TrackingEventAttributes.event:
+                type = TrackingEventType(rawValue: value) ?? .unknown
+            case TrackingEventAttributes.offset:
+                offset = value.secondsFromVastOffset()
+            case TrackingEventAttributes.playerSize:
+                playerSize = value
+            default:
+                break
             }
         }
-
-        self.type = event
+        
+        self.type = type
         self.offset = offset
+        self.playerSize = playerSize
     }
 }
 
-extension VastTrackingEvent: Equatable {
-}
+extension VastTrackingEvent: Equatable {}

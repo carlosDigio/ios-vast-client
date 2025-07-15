@@ -21,6 +21,13 @@ fileprivate enum MediaFileAttribute: String {
     case scalable
     case maintainAspectRatio
     case apiFramework
+    case audioCodec
+    case sampleRate
+    case channels
+    case streamingDelivery
+    case mimeType
+    case mediaType
+    case language
 }
 
 public struct VastMediaFile: Codable {
@@ -36,6 +43,15 @@ public struct VastMediaFile: Codable {
     public let scalable: Bool?
     public let maintainAspectRatio: Bool?
     public let apiFramework: String?
+    
+    // VAST 4.2 additions
+    public let audioCodec: String?       // Codec for audio
+    public let sampleRate: Int?          // Audio sample rate
+    public let channels: Int?            // Number of audio channels
+    public let streamingDelivery: String? // Type of streaming delivery
+    public let mimeType: String?         // Explicit MIME type
+    public let mediaType: String?        // Type of media (audio/video)
+    public let language: String?         // Content language
     
     // content
     public var url: URL?
@@ -55,6 +71,13 @@ extension VastMediaFile {
         var scalable: String?
         var maintainAspectRatio: String?
         var apiFramework: String?
+        var audioCodec: String?
+        var sampleRate: String?
+        var channels: String?
+        var streamingDelivery: String?
+        var mimeType: String?
+        var mediaType: String?
+        var language: String?
         
         attrDict.compactMap { key, value -> (MediaFileAttribute, String)? in
             guard let newKey = MediaFileAttribute(rawValue: key) else {
@@ -87,6 +110,20 @@ extension VastMediaFile {
                     maintainAspectRatio = value
                 case .apiFramework:
                     apiFramework = value
+                case .audioCodec:
+                    audioCodec = value
+                case .sampleRate:
+                    sampleRate = value
+                case .channels:
+                    channels = value
+                case .streamingDelivery:
+                    streamingDelivery = value
+                case .mimeType:
+                    mimeType = value
+                case .mediaType:
+                    mediaType = value
+                case .language:
+                    language = value
                 }
         }
         self.delivery = delivery
@@ -101,6 +138,13 @@ extension VastMediaFile {
         self.scalable = scalable?.boolValue
         self.maintainAspectRatio = maintainAspectRatio?.boolValue
         self.apiFramework = apiFramework
+        self.audioCodec = audioCodec
+        self.sampleRate = sampleRate?.intValue
+        self.channels = channels?.intValue
+        self.streamingDelivery = streamingDelivery
+        self.mimeType = mimeType
+        self.mediaType = mediaType
+        self.language = language
     }
 }
 

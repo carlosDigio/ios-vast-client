@@ -17,6 +17,10 @@ struct CompanionElements {
     static let htmlResource = "HTMLResource"
     static let iframeResource = "IFrameResource"
     static let staticResource = "StaticResource"
+    
+    // VAST 4.2 nuevos elementos
+    static let universalAdId = "UniversalAdId"
+    static let adVerifications = "AdVerifications"
 }
 
 struct CompanionAttributes {
@@ -31,6 +35,10 @@ struct CompanionAttributes {
     static let adslotid = "adSlotId" //vast 3
     static let adslotid4 = "adSlotID" //vast 4
     static let pxRatio = "pxratio"
+    
+    // VAST 4.2 nuevos atributos
+    static let renderingMode = "renderingMode"
+    static let required = "required"
 }
 
 public struct VastCompanionClickTracking {
@@ -50,6 +58,10 @@ public struct VastCompanionCreative: Codable {
     public let adSlotId: String?
     public let pxRatio: Double?
     
+    // VAST 4.2 nuevos atributos
+    public let renderingMode: VastCompanionRenderingMode?
+    public let required: Bool?
+    
     // Sub Elements
     public var staticResource: [VastStaticResource] = []
     public var iFrameResource: [URL] = []
@@ -59,6 +71,10 @@ public struct VastCompanionCreative: Codable {
     public var companionClickTracking: [URL] = []
     public var trackingEvents: [VastTrackingEvent] = []
     public var adParameters: VastAdParameters?
+    
+    // VAST 4.2 nuevos elementos
+    public var universalAdId: VastUniversalAdId?
+    public var adVerifications: VastAdVerifications?
 }
 
 extension VastCompanionCreative {
@@ -73,6 +89,10 @@ extension VastCompanionCreative {
         var apiFramework: String?
         var adSlotId: String?
         var pxRatio: Double?
+        
+        // VAST 4.2 nuevas variables
+        var renderingMode: VastCompanionRenderingMode?
+        var required: Bool?
 
         for (key, value) in attrDict {
             switch key {
@@ -96,6 +116,10 @@ extension VastCompanionCreative {
                 adSlotId = value
             case CompanionAttributes.pxRatio:
                 pxRatio = Double(value)
+            case CompanionAttributes.renderingMode:
+                renderingMode = VastCompanionRenderingMode(rawValue: value)
+            case CompanionAttributes.required:
+                required = (value.lowercased() == "true")
             default:
                 break
             }
@@ -111,7 +135,16 @@ extension VastCompanionCreative {
         self.apiFramework = apiFramework
         self.adSlotId = adSlotId
         self.pxRatio = pxRatio
+        self.renderingMode = renderingMode
+        self.required = required
     }
 }
 
 extension VastCompanionCreative: Equatable {}
+
+// VAST 4.2 - Enum para renderingMode específico para audio apps
+public enum VastCompanionRenderingMode: String, Codable, CaseIterable {
+    case concurrent = "concurrent"  // Mostrar durante el audio (ideal para iVoox)
+    case endCard = "end-card"      // Mostrar al final del audio
+    case overlay = "overlay"       // Superponer sobre el contenido
+}

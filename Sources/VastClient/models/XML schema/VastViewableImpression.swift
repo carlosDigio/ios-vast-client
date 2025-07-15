@@ -58,5 +58,4 @@ extension VastViewableImpression {
     }
 }
 
-extension VastViewableImpression: Equatable {
-}
+extension VastViewableImpression: Equatable {}

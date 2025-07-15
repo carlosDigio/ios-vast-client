@@ -41,6 +41,11 @@ public struct VastCreative: Codable {
     public var linear: VastLinearCreative?
     public var nonLinearAds: VastNonLinearAdsCreative?
     public var companionAds: VastCompanionAds?
+    public var rotation: VastRotation?
+    
+    // VAST 4.2 nuevos elementos
+    public var adVerifications: VastAdVerifications?
+    public var interactiveCreative: VastInteractiveCreative?
 }
 
 extension VastCreative {
@@ -71,6 +76,10 @@ extension VastCreative {
         self.adId = adId
         self.sequence = sequence?.intValue
         self.apiFramework = apiFramework
+        
+        if let rotationType = attrDict["rotation"] {
+            self.rotation = VastRotation(type: rotationType)
+        }
     }
 }
 

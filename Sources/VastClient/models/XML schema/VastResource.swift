@@ -13,27 +13,29 @@ enum VastResourceAttribute: String {
 
 public struct VastResource: Codable {
     public let apiFramework: String?
-    
+    public let browserOptional: Bool?
     public var url: URL?
-}
-
-extension VastResource {
-    init?(attrDict: [String: String]) {
+    
+    public init(attrDict: [String: String]) {
         var apiFramework: String?
-        attrDict.compactMap { key, value -> (VastResourceAttribute, String)? in
-            guard let newKey = VastResourceAttribute(rawValue: key) else {
-                return nil
+        var browserOptional: Bool? = false
+        
+        for (key, value) in attrDict {
+            switch key {
+            case VerificationAttributes.apiFramework:
+                apiFramework = value
+            case VerificationAttributes.browserOptional:
+                browserOptional = (value.lowercased() == "true")
+            default:
+                break
             }
-            return (newKey, value)
-            }.forEach { (key, value) in
-                switch key {
-                case .apiFramework:
-                    apiFramework = value
-                }
         }
+        
         self.apiFramework = apiFramework
+        self.browserOptional = browserOptional
+        self.url = nil // Se asignará después cuando se parsee el contenido
     }
 }
 
-extension VastResource: Equatable {
-}
+extension VastResource: Equatable {}
+

@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "VastClient",
     platforms: [
-        .iOS(.v13),
-        .tvOS(.v13),
+        .iOS(.v14),
+        .tvOS(.v14),
         .macOS(.v10_13),
     ],
     products: [

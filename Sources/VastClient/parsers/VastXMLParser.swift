@@ -55,6 +55,7 @@ class VastXMLParser: NSObject {
     var currentAdParameters: VastAdParameters?
     var creativeParameters = [VastCreativeParameter]()
     var currentCreativeParameter: VastCreativeParameter?
+    var currentCondition: VastCondition?
     
     var currentCompanionCreative: VastCompanionCreative?
 
@@ -84,17 +85,20 @@ class VastXMLParser: NSObject {
             throw VastError.internalError
         }
 
-        if !vm.errors.isEmpty, vm.ads.count == 0 {
-            let urls = vm.errors.compactMap { $0.withErrorCode(VastErrorCodes.noAdsVastResponse) }
-            track(urls: urls, eventName: "ERROR NO ADS")
-        }
+        finalizeModel(vm)
+        
         return vm
     }
 }
 
 extension VastXMLParser: XMLParserDelegate {
 
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+    func parser(_ parser: XMLParser,
+                didStartElement elementName: String,
+                namespaceURI: String?,
+                qualifiedName qName: String?,
+                attributes attributeDict: [String : String] = [:]) {
+        
         if !validVastDocument && !parsedFirstElement {
             parsedFirstElement = true
             if elementName == VastElements.vast {
@@ -107,6 +111,11 @@ extension VastXMLParser: XMLParserDelegate {
             switch elementName {
             case VastElements.ad:
                 currentVastAd = VastAd(attrDict: attributeDict)
+                // Ad Pods - Extraer información directamente de los atributos
+                if let sequenceStr = attributeDict["sequence"],
+                   let sequenceNum = Int(sequenceStr) {
+                    currentVastAd?.sequence = sequenceNum
+                }
             case AdElements.wrapper:
                 currentWrapper = VastWrapper(attrDict: attributeDict)
             case AdElements.adSystem:
@@ -129,7 +138,9 @@ extension VastXMLParser: XMLParserDelegate {
                 currentVerification = VastVerification(attrDict: attributeDict)
             case VastAdVerificationElements.verificationParameters:
                 currentAdVerificationParameters = VastAdVerificationParameters()
-            case VastAdVerificationElements.flashResource, VastAdVerificationElements.javaScriptResource:
+            case VastAdVerificationElements.flashResource,
+                 VastAdVerificationElements.javaScriptResource,
+                 VastAdVerificationElements.executableResource:
                 currentResource = VastResource(attrDict: attributeDict)
             case AdElements.ext:
                 currentVastExtension = VastExtension(attrDict: attributeDict)
@@ -166,6 +177,8 @@ extension VastXMLParser: XMLParserDelegate {
                 currentStaticResource = VastStaticResource(attrDict: attributeDict)
             case VastIconElements.iconClicks:
                 currentIcon?.iconClicks = IconClicks()
+            case VastElements.creative:
+                currentCreative = VastCreative(attrDict: attributeDict)
             case IconClicksElements.iconClickTracking:
                 currentIconClickTracking = VastIconClickTracking(attrDict: attributeDict)
             case ExtensionElements.creativeparameter:
@@ -174,6 +187,8 @@ extension VastXMLParser: XMLParserDelegate {
                 currentCreative?.companionAds = VastCompanionAds(attrDict: attributeDict)
             case CompanionAdsElements.companion:
                 currentCompanionCreative = VastCompanionCreative(attrDict: attributeDict)
+            case ConditionalElements.condition:
+                currentCondition = VastCondition(attrDict: attributeDict)
             default:
                 break
             }
@@ -237,7 +252,7 @@ extension VastXMLParser: XMLParserDelegate {
                     currentVastImpression = nil
                 }
             case AdElements.category:
-                currentVastCategory?.category = currentContent.isEmpty ? nil : currentContent
+                currentVastCategory?.value = currentContent.isEmpty ? nil : currentContent
                 if let category = currentVastCategory {
                     currentVastAd?.adCategories.append(category)
                     currentVastCategory = nil
@@ -262,7 +277,8 @@ extension VastXMLParser: XMLParserDelegate {
                 if let url = URL(string: currentContent) {
                     currentVastAd?.errors.append(url)
                 }
-            case AdElements.viewableImpression, VastAdVerificationElements.viewableImpression:
+            case AdElements.viewableImpression,
+                VastAdVerificationElements.viewableImpression:
                 if let url = URL(string: currentContent) {
                     currentVerificationViewableImpression?.url = url
                 }
@@ -291,13 +307,23 @@ extension VastXMLParser: XMLParserDelegate {
                     currentVerification = nil
                 }
             case VastAdVerificationElements.flashResource:
-                currentResource?.url = URL(string: currentContent)
+                currentResource?.url = normalizeURL(currentContent)
+
                 if let resource = currentResource {
                     currentVerification?.flashResources.append(resource)
+                    currentVerification?.executableResources.append(resource)
+                    currentResource = nil
+                }
+            case VastAdVerificationElements.executableResource:
+                currentResource?.url = normalizeURL(currentContent)
+
+                if let resource = currentResource {
+                    currentVerification?.executableResources.append(resource)
                     currentResource = nil
                 }
             case VastAdVerificationElements.javaScriptResource:
-                currentResource?.url = URL(string: currentContent)
+                currentResource?.url = normalizeURL(currentContent)
+
                 if let resource = currentResource {
                     currentVerification?.javaScriptResource.append(resource)
                     currentResource = nil
@@ -323,7 +349,12 @@ extension VastXMLParser: XMLParserDelegate {
                 currentUniversalAdId = nil
                 currentCreativeExtension = nil
             case VastCreativeElements.universalAdId:
-                currentUniversalAdId?.uniqueCreativeId = currentContent
+                // Usando una variable temporal para manejar la modificación de la estructura
+                if var adId = currentUniversalAdId {
+                    adId.setUniqueCreativeId(currentContent)
+                    currentUniversalAdId = adId
+                }
+                
                 if let universalAdId = currentUniversalAdId {
                     currentCreative?.universalAdId = universalAdId
                     currentUniversalAdId = nil
@@ -462,6 +493,7 @@ extension VastXMLParser: XMLParserDelegate {
             case ExtensionElements.creativeparameters:
                 currentVastExtension?.creativeParameters = creativeParameters
                 creativeParameters = [VastCreativeParameter]()
+
             default:
                 break
             }
@@ -472,5 +504,35 @@ extension VastXMLParser: XMLParserDelegate {
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
         fatalError = parseError
     }
+    
+    // Método auxiliar para convertir strings de duración a TimeInterval
+    private func timeIntervalFromDurationString(_ durationStr: String) -> TimeInterval? {
+        let components = durationStr.components(separatedBy: ":")
+        guard components.count == 3,
+              let hours = Double(components[0]),
+              let minutes = Double(components[1]),
+              let seconds = Double(components[2]) else {
+            return nil
+        }
 
+        return hours * 3600 + minutes * 60 + seconds
+    }
+
+    // Método para finalizar el parsing y organizar Ad Pods
+    private func finalizeModel(_ model: VastModel) {
+        // Organizar anuncios en pods
+        model.organizeAdPods()
+        
+        // Verificar si hay errores y si no hay anuncios
+        if !model.errors.isEmpty, model.ads.count == 0 {
+            let urls = model.errors.compactMap { $0.withErrorCode(VastErrorCodes.noAdsVastResponse) }
+            track(urls: urls, eventName: "ERROR NO ADS")
+        }
+    }
+    
+    private func normalizeURL(_ urlString: String) -> URL? {
+        // Eliminar espacios en blanco
+        let trimmed = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        return URL(string: trimmed)
+    }
 }

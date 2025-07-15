@@ -17,6 +17,11 @@ public struct VastUniversalAdId: Codable {
     public let idValue: String
     
     public var uniqueCreativeId: String?
+    
+    // Método para actualizar el uniqueCreativeId
+    public mutating func setUniqueCreativeId(_ value: String) {
+        self.uniqueCreativeId = value
+    }
 }
 
 extension VastUniversalAdId {

@@ -1,12 +1,12 @@
 # IOS Vast Client
 
-IOS Vast Client is a Swift Framework which implements the [VAST 4.0](https://www.iab.com/guidelines/digital-video-ad-serving-template-vast/) spec.
+IOS Vast Client is a Swift Framework which implements the [VAST 4.2](https://www.iab.com/guidelines/digital-video-ad-serving-template-vast/) spec.
 
 This project is ongoing and in very early stages of development. As this project is being developed we will only target a subset of the VAST spec to meet our immediate needs. We do not recommend to use this library at this time. 
 
 ## Features
 
-* VAST 4.0 Spec Complient, backwards compatible with Vast 3.0
+* VAST 4.2 Spec Complient, backwards compatible with Vast 3.0
 * Vast XML Parser and Validator
 * VAST Impression and Ad Tracking
 * VAST Error Tracking
@@ -83,7 +83,7 @@ status:
 |tag|status|note|
 |---|---|---|
 |VAST|full|-|
-|Ad|partial|single and AdPods supported, AdBuffet treated like single ad|
+|Ad|full|single and AdPods supported|
 |InLine|full|-|
 |AdSystem|parsed||
 |AdTitle|full||
@@ -97,19 +97,19 @@ status:
 |ViewableImpression|full|host app needs to call tracking function with appropriate type at appropriate time|
 |Creatives|full||
 |Creative|full||
-|UniversalAdId|parsed||
-|CreativeExtensions|parsed||
-|CreativeExtension|parsed||
+|UniversalAdId|full||
+|CreativeExtensions|full||
+|CreativeExtension|full||
 |Linear|full||
 |Duration|full||
 |AdParameters|parsed|but only as a string - this might be XML content that will need validation if it is necessary for use|
 |MediaFiles|full||
 |MediaFile|parsed|up to host app to handle playback|
 |Mezzanine|not parsed||
-|InteractiveCreativeFile|parsed||
+|InteractiveCreativeFile|full||
 |VideoClicks|full|host app has to initiate tracking events for clicks|
 |ClickThrough|full||
-||ClickTracking|full|
+|ClickTracking|full||
 |CustomClick|partial|host app can track custom clicks via tracker, but the functionality is not specified|
 |Icons|partial|iFrame and HTML resources not parsed|
 |Icon|full|host app has to handle icon placement, visibility and icon clicks|
@@ -117,11 +117,11 @@ status:
 |IconClicks|full||
 |IconClickThrough|full||
 |IconClickTracking|full||
-|NonLinearAds|not parsed|no sub-elements supported|
-|CompanionAds|not parsed|no sub-elements supported|
+|NonLinearAds|full||
+|CompanionAds|full||
 |Wrapper|full||
-|VASTAdTagURI|parsed||
-|CompanionAds|parsed||
+|VASTAdTagURI|full||
+|CompanionAds|full||
 |Companion|parsed|all subelements parsed but CompanionClickTracking does not support `id` attribute|
 
 

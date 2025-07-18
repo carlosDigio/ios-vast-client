@@ -52,13 +52,6 @@ public class VastValidator {
         for ad in vastModel.ads {
             try validateAd(ad)
         }
-        
-        // Validar Ad Pods si existen
-        if !vastModel.adPods.isEmpty {
-            for pod in vastModel.adPods {
-                try validateAdPod(pod)
-            }
-        }
     }
     
     // Validación específica para apps de audio como iVoox
@@ -92,8 +85,9 @@ public class VastValidator {
         }
         
         // Validar AdVerifications si están presentes
-        let adVerifications = ad.adVerifications
-        try validateAdVerifications(VastAdVerifications(verifications: adVerifications))
+        if let adVerifications = ad.adVerifications {
+            try validateAdVerifications(adVerifications)
+        }
         
         // Validar companion ads
         for creative in ad.creatives {
@@ -158,6 +152,8 @@ public class VastValidator {
     }
     
     private func validateAdPod(_ pod: VastAdPod) throws {
+        // This method is now obsolete as VastAdPod model is no longer in use
+        // Kept for reference, can be removed later
         guard pod.isComplete else {
             throw ValidationError.invalidAdPod
         }

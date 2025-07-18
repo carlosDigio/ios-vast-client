@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "VastClient",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v14),
         .tvOS(.v14),

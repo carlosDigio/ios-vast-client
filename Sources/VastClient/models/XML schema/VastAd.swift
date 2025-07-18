@@ -78,7 +78,8 @@ public struct VastAd: Codable {
     
     // VAST 4.2 nuevos elementos
     public var viewableImpression: VastViewableImpression?
-    public var adVerifications: [VastVerification] = []
+    // Corrected to use the container model for VAST 4.1+ compliance.
+    public var adVerifications: VastAdVerifications?
     public var universalAdId: VastUniversalAdId?
     public var blockedAdCategories: [VastBlockedAdCategory] = []
     public var icons: [VastIcon] = []

@@ -14,7 +14,6 @@ struct CreativeLinearElements {
 
     // /MediaFiles
     static let mediafile = "MediaFile"
-    static let interactiveCreativeFile = "InteractiveCreativeFile"
     
     // /VideoClicks
     static let clickthrough = "ClickThrough"

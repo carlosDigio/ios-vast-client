@@ -1,0 +1,41 @@
+<VAST version="4.0">
+  <Ad id="1">
+    <Wrapper>
+      <AdSystem>d</AdSystem>
+      <VASTAdTagURI>
+        <![CDATA[ https://pubads.g.doubleclick.net/gampad/ads?sz=1x1&iu=/1019149/app_vast&ad_type=audio_video&vpmute=0&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&ciu_szs=300x250,320x50&max_ad_duration=90000&correlator=1752820240&url=com.ivoox.ivoox&cust_params=subcat%3DHumor+y+entretenimiento%26idpodcast%3D661078%26audioid%3D153090264%26antiquity%3d4day%26isproducer%3d0%26fancandidate%3d0%26os%3dios%26build%3d1_dev%26version%3d400058%26appversion%3d4_58_1_dev%26idchannel%3d514025%26tags%3dparodias%2Cbromas%2Cgags%2Ccomedia%2Cchistes%26isCPC%3d0%26isRadio%3d0&gdpr=1&gdpr_consent=CQUzMAAQUzMAAAHABAESBzFsAP_gAEPgAAiQLYNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwWx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgKogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdIYetDfv8ZBKT-9IEd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__rl_e_X_vf_n37v943H77v____fBbBqP43_ra8t_xcK_D9shzGL_v8AfdiGIIDZNGzAuZdS3pGC2-wmZIkTRhTBAyIAFG6IJAAlIgMIiIoUIRECpeIdgAmCFCdpBDwMkAZiLAwKAAkJ8XFsayATPJ1PzorvsSW1nJte26uWSTMEd-5VrzySqhMThTBgo71tjQICPV5CnuqJWtFpH5ndImBSAGN_8o1MvW7D3F856tNeLr_PbpiX77kue_736J2zf3vtn1_-Tv_7_N663IAAA&seriestitle=La_Ruina&description_url=https%3A%2F%2Fwww.ivoox.com%2F259-la-ruina-con-xavi-daura-audios-mp3_rf_153090264_1.html ]]>
+      </VASTAdTagURI>
+      <Error>http://myErrorURL/wrapper/error</Error>
+      <Impression>http://myTrackingURL/wrapper/impression</Impression>
+      <Extensions>
+        <Extension type="waterfall" fallback_index="0" />
+      </Extensions>
+    </Wrapper>
+  </Ad>
+  <Ad id="2">
+    <Wrapper>
+      <AdSystem>ap</AdSystem>
+      <VASTAdTagURI>
+        <![CDATA[ https://pubads.g.doubleclick.net/gampad/ads?sz=1x1&iu=/1019149/app_vast_autopromo_2020&ad_type=audio_video&vpmute=0&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&ciu_szs=300x250,320x50&max_ad_duration=90000&correlator=1752820240&url=com.ivoox.ivoox&cust_params=subcat%3DHumor+y+entretenimiento%26idpodcast%3D661078%26audioid%3D153090264%26antiquity%3d4day%26isproducer%3d0%26fancandidate%3d0%26os%3dios%26build%3d1_dev%26version%3d400058%26appversion%3d4_58_1_dev%26idchannel%3d514025%26tags%3dparodias%2Cbromas%2Cgags%2Ccomedia%2Cchistes%26isCPC%3d0%26isRadio%3d0&gdpr=1&gdpr_consent=CQUzMAAQUzMAAAHABAESBzFsAP_gAEPgAAiQLYNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwWx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgKogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdIYetDfv8ZBKT-9IEd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__rl_e_X_vf_n37v943H77v____fBbBqP43_ra8t_xcK_D9shzGL_v8AfdiGIIDZNGzAuZdS3pGC2-wmZIkTRhTBAyIAFG6IJAAlIgMIiIoUIRECpeIdgAmCFCdpBDwMkAZiLAwKAAkJ8XFsayATPJ1PzorvsSW1nJte26uWSTMEd-5VrzySqhMThTBgo71tjQICPV5CnuqJWtFpH5ndImBSAGN_8o1MvW7D3F856tNeLr_PbpiX77kue_736J2zf3vtn1_-Tv_7_N663IAAA&seriestitle=La_Ruina&description_url=https%3A%2F%2Fwww.ivoox.com%2F259-la-ruina-con-xavi-daura-audios-mp3_rf_153090264_1.html ]]>
+      </VASTAdTagURI>
+      <Error>http://myErrorURL/wrapper/error</Error>
+      <Impression>http://myTrackingURL/wrapper/impression</Impression>
+      <Extensions>
+        <Extension type="waterfall" fallback_index="1" />
+      </Extensions>
+    </Wrapper>
+  </Ad>
+  <Ad id="3">
+    <Wrapper>
+      <AdSystem>ae</AdSystem>
+      <VASTAdTagURI>
+        <![CDATA[ https://kriteria.deliveryengine.adswizz.com/www/delivery/swfIndex.php?zoneId=1863&protocolVersion=2.0&reqType=AdsSetup&companionZones=763&aw_0_req.gdpr=true&aw_0_req.userConsentV2=CQUzMAAQUzMAAAHABAESBzFsAP_gAEPgAAiQLYNT_G__bWlr-b73aftkeYxP9_hr7sQxBgbJE24FzLvW_JwWx2E5NAzatqIKmRIAu3TBIQNlHJDURVCgKogVryDMaEyUoTNKJ6BkiFMRI2JYCFxvm4tjeQCY5vr991c1mB-t7dr83dzyy4hHn3a5_2S1WJCdIYetDfv8ZBKT-9IEd_x8v4v4_F7pE2-eS1n_pGvp6D9-Yns_dB299_bbffzPn__rl_e_X_vf_n37v943H77v____fBbBqP43_ra8t_xcK_D9shzGL_v8AfdiGIIDZNGzAuZdS3pGC2-wmZIkTRhTBAyIAFG6IJAAlIgMIiIoUIRECpeIdgAmCFCdpBDwMkAZiLAwKAAkJ8XFsayATPJ1PzorvsSW1nJte26uWSTMEd-5VrzySqhMThTBgo71tjQICPV5CnuqJWtFpH5ndImBSAGN_8o1MvW7D3F856tNeLr_PbpiX77kue_736J2zf3vtn1_-Tv_7_N663IAAA&awCollectionId=ruina&awEpisodeId=153090264&aw_0_cnt.url=https%3A%2F%2Fapi.ivoox.com%2F259-la-ruina-con-xavi-daura_mn_153090264_api_1.mp3 ]]>
+      </VASTAdTagURI>
+      <Error>http://myErrorURL/wrapper/error</Error>
+      <Impression>http://myTrackingURL/wrapper/impression</Impression>
+      <Extensions>
+        <Extension type="waterfall" fallback_index="2" />
+      </Extensions>
+    </Wrapper>
+  </Ad>
+</VAST>

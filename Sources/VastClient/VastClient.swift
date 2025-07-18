@@ -45,7 +45,6 @@ public class VastClient {
     
     /**
      Load local files easily with schema specifier "test://"
-     
      Use this to chain wrapper parsers to be forced to used local path from VastAdTagURI. Make sure to change all VastAdTagURI to local test path.
      
      - parameter url: URL of local or remote file. For local files the url has to start with `test://` and can not contain ".xml" extension. For example: `test://Pubads_Inline_Model-test` to load file named "Pubads_Inline_Model-test.xml"

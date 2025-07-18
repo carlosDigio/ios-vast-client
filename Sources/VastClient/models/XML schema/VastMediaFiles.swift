@@ -9,7 +9,6 @@ import Foundation
 
 public struct VastMediaFiles: Codable {
     public var mediaFiles: [VastMediaFile] = []
-    public var interactiveCreativeFiles: [VastInteractiveCreativeFile] = []
 }
 
 extension VastMediaFiles: Equatable {

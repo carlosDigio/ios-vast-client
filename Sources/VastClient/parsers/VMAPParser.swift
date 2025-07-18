@@ -20,17 +20,12 @@ class VMAPParser: NSObject {
     var fatalError: Error?
 
     var vmapModel: VMAPModel?
-
     var adBreaks = [VMAPAdBreak]()
     var currentAdBreak: VMAPAdBreak?
-
     var trackingEvents = [VMAPTrackingEvent]()
     var currentTrackingEvent: VMAPTrackingEvent?
-
     var currentVMAPAdSource: VMAPAdSource?
-
     var currentVastModel: VastModel?
-
     var currentContent = ""
 
     init(options: VastClientOptions) {

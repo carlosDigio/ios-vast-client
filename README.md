@@ -1,12 +1,12 @@
 # IOS Vast Client
 
-IOS Vast Client is a Swift Framework which implements the [VAST 4.0](https://www.iab.com/guidelines/digital-video-ad-serving-template-vast/) spec.
+IOS Vast Client is a Swift Framework which implements the [VAST 4.3](https://iabtechlab.com/wp-content/uploads/2022/09/VAST_4.3.pdf) spec.
 
 This project is ongoing and in very early stages of development. As this project is being developed we will only target a subset of the VAST spec to meet our immediate needs. We do not recommend to use this library at this time. 
 
 ## Features
 
-* VAST 4.0 Spec Complient, backwards compatible with Vast 3.0
+* VAST 4.3 Spec Complient, backwards compatible with Vast 3.0
 * Vast XML Parser and Validator
 * VAST Impression and Ad Tracking
 * VAST Error Tracking
@@ -85,44 +85,45 @@ status:
 |VAST|full|-|
 |Ad|partial|single and AdPods supported, AdBuffet treated like single ad|
 |InLine|full|-|
-|AdSystem|parsed||
-|AdTitle|full||
-|Impression|parsed||
-|Category|parsed||
-|Description|parsed||
-|Advertiser|parsed||
-|Pricing|parsed||
-|Survey|parsed||
+|AdSystem|full|Parsed and tracked completely|
+|AdTitle|full|-|
+|Impression|full|Parsed and tracked by VastTracker|
+|Category|full|Parsed and available to the host app|
+|Description|full|Parsed and available to the host app|
+|Advertiser|full|Parsed and available to the host app|
+|Pricing|full|Parsed and available to the host app|
+|Survey|full|Parsed and available to the host app|
 |Error|full|host app needs to initiate the error tracking|
 |ViewableImpression|full|host app needs to call tracking function with appropriate type at appropriate time|
-|Creatives|full||
-|Creative|full||
-|UniversalAdId|parsed||
-|CreativeExtensions|parsed||
-|CreativeExtension|parsed||
-|Linear|full||
-|Duration|full||
+|AdVerifications|full|VAST 4.x feature|
+|Creatives|full|-|
+|Creative|full|Includes VAST 4.3 attributes|
+|UniversalAdId|full|Parsed and available to the host app|
+|CreativeExtensions|full|Parsed and available to the host app|
+|CreativeExtension|full|Parsed and available to the host app|
+|CreativeBehaviors|full|VAST 4.3 feature|
+|Linear|full|-|
+|Duration|full|-|
 |AdParameters|parsed|but only as a string - this might be XML content that will need validation if it is necessary for use|
-|MediaFiles|full||
-|MediaFile|parsed|up to host app to handle playback|
-|Mezzanine|not parsed||
-|InteractiveCreativeFile|parsed||
-|VideoClicks|full|host app has to initiate tracking events for clicks|
-|ClickThrough|full||
-||ClickTracking|full|
-|CustomClick|partial|host app can track custom clicks via tracker, but the functionality is not specified|
+|MediaFiles|full|-|
+|MediaFile|full|All attributes parsed, playback handled by host app|
+|Mezzanine|not parsed|-|
+|InteractiveCreativeFile|full|VAST 4.2 SIMID support|
+|VideoClicks|full|host app has to initiate tracking events|
+|ClickThrough|full|-|
+|ClickTracking|full|-|
+|CustomClick|full|Tracking supported via VastTracker|
 |Icons|partial|iFrame and HTML resources not parsed|
-|Icon|full|host app has to handle icon placement, visibility and icon clicks|
-|IconViewTracking|parsed|View action tracking not implemented|
-|IconClicks|full||
-|IconClickThrough|full||
-|IconClickTracking|full||
-|NonLinearAds|not parsed|no sub-elements supported|
-|CompanionAds|not parsed|no sub-elements supported|
-|Wrapper|full||
-|VASTAdTagURI|parsed||
-|CompanionAds|parsed||
-|Companion|parsed|all subelements parsed but CompanionClickTracking does not support `id` attribute|
+|Icon|full|host app handles placement and visibility|
+|IconViewTracking|full|Support for view tracking events|
+|IconClicks|full|-|
+|IconClickThrough|full|-|
+|IconClickTracking|full|-|
+|NonLinearAds|full|Full parsing and tracking support|
+|CompanionAds|full|Full parsing and tracking support|
+|Wrapper|full|-|
+|VASTAdTagURI|full|Wrapper URI is parsed and resolved|
+|Companion|full|Complete support including click tracking|
 
 
 ## Getting Started

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="4.3" xmlns="http://www.iab.com/VAST">
+  <Ad id="20011" sequence="1" conditionalAd="false">
+    <InLine>
+      <AdSystem version="4.3">iVoox AdServer</AdSystem>
+      <AdTitle>VAST 4.3 Complete Test</AdTitle>
+      <Impression id="imp-123"><![CDATA[https://example.com/impression]]></Impression>
+      <AdVerifications>
+        <Verification vendor="iVoox-Ver-1">
+          <JavaScriptResource apiFramework="OMID" browserOptional="true">
+            <![CDATA[https://example.com/verification.js]]>
+          </JavaScriptResource>
+        </Verification>
+        <SupplementalAdVerification vendor="iVoox-Ver-2">
+            <JavaScriptResource apiFramework="OMID" browserOptional="false">
+              <![CDATA[https://example.com/supplemental_verification.js]]>
+            </JavaScriptResource>
+        </SupplementalAdVerification>
+      </AdVerifications>
+      <Creatives>
+        <Creative id="5480" sequence="1" adServingId="ad-id-987" creativeType="video">
+          <CreativeDimensions width="1280" height="720"></CreativeDimensions>
+          <CreativeBehaviors>
+            <Behavior type="closeable">true</Behavior>
+            <Behavior type="user-initiated">false</Behavior>
+          </CreativeBehaviors>
+          <CreativeMediaFile id="media-file-1" type="image/jpeg">
+            <![CDATA[https://example.com/creative-media.jpg]]>
+          </CreativeMediaFile>
+          <CreativeTrackingEvents>
+            <Tracking event="creativeView"><![CDATA[https://example.com/creative-view]]></Tracking>
+          </CreativeTrackingEvents>
+          <Linear>
+            <Duration>00:00:30</Duration>
+            <MediaFiles>
+              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720">
+                <![CDATA[https://example.com/video.mp4]]>
+              </MediaFile>
+            </MediaFiles>
+          </Linear>
+        </Creative>
+      </Creatives>
+    </InLine>
+  </Ad>
+</VAST>

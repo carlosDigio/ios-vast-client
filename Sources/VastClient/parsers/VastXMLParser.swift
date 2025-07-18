@@ -33,6 +33,7 @@ class VastXMLParser: NSObject {
     var currentSurvey: VastSurvey?
     var currentViewableImpression: VastViewableImpression?
     var currentVerification: VastVerification?
+    var currentAdVerifications: VastAdVerifications?
     var currentResource: VastResource?
     var currentVerificationViewableImpression: VastViewableImpression?
     var currentAdVerificationParameters: VastAdVerificationParameters?
@@ -134,6 +135,9 @@ extension VastXMLParser: XMLParserDelegate {
                 } else {
                     currentViewableImpression = VastViewableImpression(attrDict: attributeDict)
                 }
+            // VAST 4.1+ AdVerifications container
+            case AdElements.adVerifications:
+                currentAdVerifications = VastAdVerifications()
             case AdElements.verification:
                 currentVerification = VastVerification(attrDict: attributeDict)
             case VastAdVerificationElements.verificationParameters:
@@ -146,6 +150,9 @@ extension VastXMLParser: XMLParserDelegate {
                 currentVastExtension = VastExtension(attrDict: attributeDict)
             case AdElements.creative:
                 currentCreative = VastCreative(attrDict: attributeDict)
+            // Added case to handle InteractiveCreativeFile at the Creative level for VAST 4.2
+            case VastCreativeElements.interactiveCreativeFile:
+                currentInteractiveCreativeFile = VastInteractiveCreativeFile(attrDict: attributeDict)
             case VastCreativeElements.linear:
                 currentLinearCreative = VastLinearCreative(attrDict: attributeDict)
             case VastCreativeElements.nonLinearAds:
@@ -169,8 +176,6 @@ extension VastXMLParser: XMLParserDelegate {
                 currentAdParameters = VastAdParameters(attrDict: attributeDict)
             case CreativeLinearElements.mediafile:
                 currentMediaFile = VastMediaFile(attrDict: attributeDict)
-            case CreativeLinearElements.interactiveCreativeFile:
-                currentInteractiveCreativeFile = VastInteractiveCreativeFile(attrDict: attributeDict)
             case CreativeLinearElements.icon:
                 currentIcon = VastIcon(attrDict: attributeDict)
             case VastIconElements.staticResource:
@@ -303,7 +308,7 @@ extension VastXMLParser: XMLParserDelegate {
                 }
             case AdElements.verification:
                 if let verification = currentVerification {
-                    currentVastAd?.adVerifications.append(verification)
+                    currentVastAd?.adVerifications?.verifications.append(verification)
                     currentVerification = nil
                 }
             case VastAdVerificationElements.flashResource:
@@ -389,10 +394,10 @@ extension VastXMLParser: XMLParserDelegate {
                     currentLinearCreative?.files.mediaFiles.append(mediaFile)
                     currentMediaFile = nil
                 }
-            case CreativeLinearElements.interactiveCreativeFile:
+            case VastCreativeElements.interactiveCreativeFile:
                 currentInteractiveCreativeFile?.url = URL(string: currentContent)
                 if let interactiveCreativeFile = currentInteractiveCreativeFile {
-                    currentLinearCreative?.files.interactiveCreativeFiles.append(interactiveCreativeFile)
+                    currentCreative?.interactiveCreativeFile = interactiveCreativeFile
                     currentInteractiveCreativeFile = nil
                 }
             case CreativeLinearElements.clickthrough, CreativeLinearElements.clicktracking, CreativeLinearElements.customclick:
@@ -526,7 +531,9 @@ extension VastXMLParser: XMLParserDelegate {
         // Verificar si hay errores y si no hay anuncios
         if !model.errors.isEmpty, model.ads.count == 0 {
             let urls = model.errors.compactMap { $0.withErrorCode(VastErrorCodes.noAdsVastResponse) }
-            track(urls: urls, eventName: "ERROR NO ADS")
+            // Error: track method is not defined. Replace with logging or remove.
+            // track(urls: urls, eventName: "ERROR NO ADS")
+            print("ERROR NO ADS: \(urls)")
         }
     }
     

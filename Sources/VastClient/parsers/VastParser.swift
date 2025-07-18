@@ -195,7 +195,6 @@ class VastParser {
                             if let linear = wrapperCreative.linear {
                                 creative.linear?.duration = linear.duration
                                 creative.linear?.files.mediaFiles.append(contentsOf: linear.files.mediaFiles)
-                                creative.linear?.files.interactiveCreativeFiles.append(contentsOf: linear.files.interactiveCreativeFiles)
                                 creative.linear?.trackingEvents.append(contentsOf: linear.trackingEvents)
                                 creative.linear?.icons.append(contentsOf: linear.icons)
                                 creative.linear?.videoClicks.append(contentsOf: linear.videoClicks)

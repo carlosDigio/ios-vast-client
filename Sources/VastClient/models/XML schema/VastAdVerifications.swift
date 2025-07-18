@@ -10,22 +10,27 @@ import Foundation
 
 struct AdVerificationsElements {
     static let verification = "Verification"
+    // VAST 4.3 element
+    static let supplementalAdVerification = "SupplementalAdVerification"
 }
 
-// VAST 4.2 - AdVerifications contenedor principal para verificaciones
+// VAST 4.2 - AdVerifications container for verifications
+// Updated for VAST 4.3 to include supplemental verifications.
 public struct VastAdVerifications: Codable {
     public var verifications: [VastVerification] = []
+    // VAST 4.3 supplemental ad verifications
+    public var supplementalAdVerifications: [VastSupplementalAdVerification] = []
     
-    // Métodos de conveniencia para iVoox
+    // Convenience methods
     public func hasVerifications() -> Bool {
-        return !verifications.isEmpty
+        return !verifications.isEmpty || !supplementalAdVerifications.isEmpty
     }
     
     public func verificationsByVendor(_ vendor: String) -> [VastVerification] {
         return verifications.filter { $0.vendor?.lowercased() == vendor.lowercased() }
     }
     
-    // Verificaciones comunes en el mercado publicitario
+    // Common verifications in the advertising market
     public var moatVerifications: [VastVerification] {
         return verificationsByVendor("moat")
     }

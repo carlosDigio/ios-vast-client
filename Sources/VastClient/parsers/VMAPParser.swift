@@ -155,6 +155,10 @@ extension VMAPParser: XMLParserDelegate {
                     currentVMAPAdSource?.vastAdData = vastModel
                     currentVastModel = nil
                 }
+            case VMAPAdSourceElements.adTagURI:
+                currentVMAPAdSource?.adTagURI = URL(string: currentContent)
+            case VMAPAdSourceElements.customAdData:
+                currentVMAPAdSource?.customAdData = currentContent
             default:
                 break
             }
